@@ -23,11 +23,11 @@ import org.http4s.circe._
 
 final case class Movie(id: String, title: String, year: String)
 
-class Movies(tag: Tag) extends Table[(String, String, String)](tag, "MovieTitle") {
+class Movies(tag: Tag) extends Table[Movie](tag, "MovieTitle") {
   def id = column[String]("ID", O.PrimaryKey)
   def title = column[String]("Name")
   def year = column[String]("Year")
-  def * = (id, title, year)
+  def * = (id, title, year) <> (Movie.tupled, Movie.unapply)
 }
 
 class MovieRepository {
@@ -35,7 +35,24 @@ class MovieRepository {
 
   val db = Database.forConfig("movies")
 
-  def getAll(): Future[List[(String, String, String)]] = {
+  def getAll(): Future[List[Movie]] = {
+    db.run(movies.to[List].result)
+  }
+
+  def findById(id: String): Future[Option[Movie]] = {
+    val searchId = movies.filter(_.id === id)
+    db.run(searchId.to[List].result.headOption)
+  }
+
+  def findByTitle(title: String): Future[List[Movie]] = {
+    db.run(movies.to[List].result)
+  }
+
+  def search(searchText: String): Future[List[Movie]] = {
+    db.run(movies.to[List].result)
+  }
+
+  def findByYear(): Future[List[Movie]] = {
     db.run(movies.to[List].result)
   }
 
