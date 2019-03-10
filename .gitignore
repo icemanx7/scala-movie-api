@@ -95,3 +95,12 @@ target/*
 .idea/*
 
 
+### IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea
+.attach_pid*
+
+
+

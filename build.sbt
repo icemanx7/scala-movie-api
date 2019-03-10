@@ -25,9 +25,15 @@ libraryDependencies ++= Seq(
   
 )
 
+
 libraryDependencies ++= Seq(
-  "org.xerial" % "sqlite-jdbc" % "3.18.0",
-  "io.getquill" %% "quill-jdbc" % "3.1.0"
+  "org.http4s" %% "http4s-circe" % http4sVersion,
+  // Optional for auto-derivation of JSON codecs
+  "io.circe" %% "circe-generic" % "0.11.1",
+  // Optional for string interpolation to JSON model
+  "io.circe" %% "circe-literal" % "0.11.1"
 )
+
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
 scalacOptions ++= Seq("-Ypartial-unification")
