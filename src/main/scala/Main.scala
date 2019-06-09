@@ -23,11 +23,10 @@ object Main {
 
   val dbInstance = new MovieRepository
 
-  private val tokenExpiryPeriodInDays = 1
   private val secretKey = "super_secret_key"
   val algo = JwtAlgorithm.HS256
   val claim = JwtClaim(
-    expiration = Some(Instant.now.plusSeconds(157784760).getEpochSecond),
+    expiration = Some(Instant.now.plusSeconds(10).getEpochSecond),
     issuedAt = Some(Instant.now.getEpochSecond)
   )
   val token = JwtSprayJson.encode(claim, secretKey, algo)
