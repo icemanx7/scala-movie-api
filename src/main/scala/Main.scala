@@ -10,17 +10,17 @@ import user.UserLogin
 
 object Main {
 
-  val dbInstance = new MovieRepository
-  val movieRoute = new MovieRoute(dbInstance)
-  val userRoute = new UserLogin(dbInstance)
-
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
+  val dbInstance = new MovieRepository
+  val movieRoute = new MovieRoute(dbInstance)
+  val userRoute = new UserLogin(dbInstance)
 
   def main(args: Array[String]) {
 
+    //TODO: Move this to the route folder
     val route: Route = movieRoute.getListMovies ~ userRoute.login
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
