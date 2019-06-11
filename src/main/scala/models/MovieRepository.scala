@@ -1,15 +1,11 @@
 package models
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import slick.jdbc.SQLiteProfile.api._
 
 import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
 
 
-final case class Movie(id: String, title: String, year: String)
-
-class Movies(tag: Tag) extends Table[Movie](tag, "MovieTitle") {
+class MoviesDTO(tag: Tag) extends Table[Movie](tag, "MovieTitle") {
   def id = column[String]("ID", O.PrimaryKey)
   def title = column[String]("Name")
   def year = column[String]("Year")
@@ -17,7 +13,7 @@ class Movies(tag: Tag) extends Table[Movie](tag, "MovieTitle") {
 }
 
 class MovieRepository {
-  val movies = TableQuery[Movies]
+  val movies = TableQuery[MoviesDTO]
 
   val db = Database.forConfig("movies")
 
