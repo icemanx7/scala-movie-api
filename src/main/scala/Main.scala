@@ -1,12 +1,12 @@
-import models.MovieRepository
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
+
 import scala.io.StdIn
-import movies.MovieRoute
-import user.UserLogin
+import movies.{MovieRepository, MovieRoute}
+import user.{UserLogin, UserRepository, UserService}
 
 object Main {
 
@@ -15,8 +15,10 @@ object Main {
   implicit val executionContext = system.dispatcher
 
   val dbInstance = new MovieRepository
+  val userDb = new UserRepository
+  val userService = new UserService(userDb)
   val movieRoute = new MovieRoute(dbInstance)
-  val userRoute = new UserLogin(dbInstance)
+  val userRoute = new UserLogin(userService)
 
   def main(args: Array[String]) {
 

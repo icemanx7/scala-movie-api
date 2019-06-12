@@ -1,6 +1,8 @@
-package models
+package movies
 
+import models.Movie
 import slick.jdbc.SQLiteProfile.api._
+
 import scala.concurrent.Future
 
 class MoviesDTO(tag: Tag) extends Table[Movie](tag, "MovieTitle") {

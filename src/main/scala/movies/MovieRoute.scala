@@ -1,7 +1,7 @@
 package movies
 
 import authentication.AuthenticationDirectives._
-import models.{Movie, MovieRepository}
+import models.Movie
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.model.StatusCodes
