@@ -1,9 +1,7 @@
 package models
 
 import slick.jdbc.SQLiteProfile.api._
-
-import scala.concurrent.{Await, Future}
-
+import scala.concurrent.Future
 
 class MoviesDTO(tag: Tag) extends Table[Movie](tag, "MovieTitle") {
   def id = column[String]("ID", O.PrimaryKey)

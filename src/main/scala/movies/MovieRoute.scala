@@ -12,22 +12,26 @@ import scala.concurrent.Future
 
 class MovieRoute(dbInstance: MovieRepository) {
 
-  private def getSingleMovie: Route = ???
 
   private def findMovies: Route = ???
 
   def getListMovies: Route = get {
 
-    authenticated { claims  =>
+    authenticated { _  =>
       pathPrefix("movies" ) {
-        val maybeItem:Future[List[Movie]] = dbInstance.getAll
-        print(claims)
-
-        onSuccess(maybeItem) {
-          case res => complete(res)
-          case _ => complete(StatusCodes.NotFound)
+        val movieLists: Future[List[Movie]] = dbInstance.getAll
+        onSuccess(movieLists) {
+          res => complete(res)
         }
-      }
+      } ~
+        pathPrefix("movie" / LongNumber) { id =>
+          val movie = dbInstance.findById(id.toString)
+          onSuccess(movie) {
+            case Some(res) => complete(res)
+            case None => complete(StatusCodes.NotFound)
+          }
+
+        }
     }
   }
 

@@ -1,10 +1,10 @@
 package authentication
 
 
-import akka.http.scaladsl.server.{Directive1, Route}
+import akka.http.scaladsl.server.Directive1
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.model.StatusCodes
-import pdi.jwt.{JwtAlgorithm, JwtClaim, JwtSprayJson}
+import pdi.jwt.{JwtAlgorithm, JwtSprayJson}
 
 object AuthenticationDirectives {
 
