@@ -1,3 +1,5 @@
+enablePlugins(JavaAppPackaging)
+
 name := "movie-webserver"
 
 version := "0.1"

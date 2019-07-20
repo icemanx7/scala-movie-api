@@ -11,19 +11,19 @@ import utils.MarshallFormatImplicits._
 
 class UserLogin(userService: UserService) {
 
-  // Add the userService That will check the credentials.
   def login: Route = post {
-    entity(as[LoginRequest]) { user =>
-      val isIndatabase = userService.login(user)
-      onSuccess(isIndatabase) {
-        case Some(realUser) =>
-          respondWithHeader(RawHeader("Access-Token", jwtToken.getToken)) {
-            complete(realUser)
-          }
-        case None => complete(StatusCodes.Unauthorized)
+    pathPrefix("login" ) {
+      entity(as[LoginRequest]) { user =>
+        val isIndatabase = userService.login(user)
+        onSuccess(isIndatabase) {
+          case Some(realUser) =>
+            respondWithHeader(RawHeader("Access-Token", jwtToken.getToken)) {
+              complete(realUser)
+            }
+          case None => complete(StatusCodes.Unauthorized)
+        }
       }
     }
-
   }
 }
 
