@@ -18,7 +18,7 @@ class MovieRoute(dbInstance: MovieRepository) {
   def getListMovies: Route = get {
 
     authenticated { _  =>
-      pathPrefix("movies" ) {
+      pathPrefix("movies") {
         val movieLists: Future[List[Movie]] = dbInstance.getAll
         onSuccess(movieLists) {
           res => complete(res)
@@ -30,7 +30,6 @@ class MovieRoute(dbInstance: MovieRepository) {
             case Some(res) => complete(res)
             case None => complete(StatusCodes.NotFound)
           }
-
         }
     }
   }

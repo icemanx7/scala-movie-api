@@ -13,6 +13,7 @@ class MoviesDTO(tag: Tag) extends Table[Movie](tag, "MovieTitle") {
 }
 
 class MovieRepository {
+
   val movies = TableQuery[MoviesDTO]
 
   val db = Database.forConfig("movies")
@@ -37,5 +38,4 @@ class MovieRepository {
   def findByYear(): Future[List[Movie]] = {
     db.run(movies.to[List].result)
   }
-
 }

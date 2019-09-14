@@ -17,9 +17,7 @@ class UserLogin(userService: UserService) {
         val isIndatabase = userService.login(user)
         onSuccess(isIndatabase) {
           case Some(realUser) =>
-            respondWithHeader(RawHeader("Access-Token", jwtToken.getToken)) {
               complete(realUser)
-            }
           case None => complete(StatusCodes.Unauthorized)
         }
       }

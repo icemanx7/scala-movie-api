@@ -1,6 +1,8 @@
 package user
 
+import authentication.AuthenticationDirectives.jwtToken
 import models.{LoggedInUser, LoginRequest}
+
 import scala.concurrent.{ExecutionContext, Future}
 import utils.MonadTransformers._
 
@@ -12,7 +14,7 @@ class UserService(dbInstance: UserRepository)
       .filterT(user => {
         println(user)
         user.password == loginUser.password})
-      .mapT(user => LoggedInUser(user.id, user.name))
+      .mapT(user => LoggedInUser(user.id, user.name, jwtToken.getToken))
   }
 
 }
