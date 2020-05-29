@@ -11,7 +11,7 @@ import utils.MarshallFormatImplicits
 
 import scala.concurrent.Future
 
-class MovieRoute(dbInstance: MovieRepository) extends Directives with  MarshallFormatImplicits {
+class MovieRoute(movieService: MovieService) extends Directives with  MarshallFormatImplicits {
 
 
   private def findMovies: Route = ???
@@ -20,18 +20,19 @@ class MovieRoute(dbInstance: MovieRepository) extends Directives with  MarshallF
 
     authenticated { _  =>
       pathPrefix("movies") {
-        val movieLists: Future[List[Movie]] = dbInstance.getAll
-        onSuccess(movieLists) {
+        val movieList = movieService.getAllMovies()
+        onSuccess(movieList) {
           res => complete(res)
         }
-      } ~
-        pathPrefix("movie" / LongNumber) { id =>
-          val movie = dbInstance.findById(id.toString)
-          onSuccess(movie) {
-            case Some(res) => complete(res)
-            case None => complete(StatusCodes.NotFound)
-          }
-        }
+      }
+//      ~
+//        pathPrefix("movie" / LongNumber) { id =>
+//          val movie = dbInstance.findById(id.toString)
+//          onSuccess(movie) {
+//            case Some(res) => complete(res)
+//            case None => complete(StatusCodes.NotFound)
+//          }
+//        }
     }
   }
 

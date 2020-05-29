@@ -3,7 +3,6 @@ package utils
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import models.{ErrorInfo, LoggedInUser, LoginRequest, Movie, Movies}
 import spray.json.DefaultJsonProtocol
-import spray.json.DefaultJsonProtocol._
 
 trait MarshallFormatImplicits extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val movieFormat = jsonFormat3(Movie)
