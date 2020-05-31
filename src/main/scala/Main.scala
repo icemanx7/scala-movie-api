@@ -17,6 +17,7 @@ object Main {
   val movieDb = new MovieRepository
   val userDb = new UserRepository
   val reviewDb = new ReviewsRepository
+
   val userService = new UserService(userDb)
   val movieService = new MovieService(movieDb, reviewDb)
   val movieRoute = new MovieRoute(movieService)

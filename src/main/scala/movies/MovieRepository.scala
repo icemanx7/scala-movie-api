@@ -38,20 +38,4 @@ class MovieRepository {
   def findByYear(): Future[List[Movie]] = {
     db.run(movies.to[List].result)
   }
-
-//  def insertReview(): Unit = {
-//    val insertActions = DBIO.seq(
-//      movies += Movie("99999", "rrr", "ddd"),
-//
-////      movies ++= Seq(
-////        ("test2", "test2"),
-////        (te)
-////      ),
-//
-//      // "sales" and "total" will use the default value 0:
-//      movies.map(c => (c.id, c.title, c.year)) += ("Colombian_Decaf", "","")
-//    )
-//
-//    db.run(insertActions)
-//  }
 }

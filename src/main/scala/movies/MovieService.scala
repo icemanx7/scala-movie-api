@@ -10,12 +10,8 @@ class MovieService(movieDbInstance: MovieRepository, reviewDbInstance: ReviewsRe
     movieDbInstance.getAll
   }
 
-  def insertMovieReview(movieReview: MovieReview) = {
-    val review = Review(None, movieReview.review, 10.0, "TODAY")
+  def insertMovieReview(movieReview: MovieReview): Future[Unit] = {
+    val review = Review(None, movieReview.review,movieReview.rating, movieReview.reviewDate)
     reviewDbInstance.insertReview(review)
   }
-
-
-
-
 }
