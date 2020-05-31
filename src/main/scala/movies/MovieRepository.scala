@@ -5,7 +5,7 @@ import slick.jdbc.SQLiteProfile.api._
 
 import scala.concurrent.Future
 
-class MoviesDTO(tag: Tag) extends Table[Movie](tag, "MovieTitle") {
+class MoviesDTO(tag: Tag) extends Table[Movie](tag, "Movies") {
   def id = column[String]("ID", O.PrimaryKey)
   def title = column[String]("Name")
   def year = column[String]("Year")
@@ -39,19 +39,19 @@ class MovieRepository {
     db.run(movies.to[List].result)
   }
 
-  def insertReview(): Unit = {
-    val insertActions = DBIO.seq(
-      movies += Movie("99999", "rrr", "ddd"),
-
-//      movies ++= Seq(
-//        ("test2", "test2"),
-//        (te)
-//      ),
-
-      // "sales" and "total" will use the default value 0:
-      movies.map(c => (c.id, c.title, c.year)) += ("Colombian_Decaf", "","")
-    )
-
-    db.run(insertActions)
-  }
+//  def insertReview(): Unit = {
+//    val insertActions = DBIO.seq(
+//      movies += Movie("99999", "rrr", "ddd"),
+//
+////      movies ++= Seq(
+////        ("test2", "test2"),
+////        (te)
+////      ),
+//
+//      // "sales" and "total" will use the default value 0:
+//      movies.map(c => (c.id, c.title, c.year)) += ("Colombian_Decaf", "","")
+//    )
+//
+//    db.run(insertActions)
+//  }
 }

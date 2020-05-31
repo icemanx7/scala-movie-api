@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 
 import scala.io.StdIn
-import movies.{MovieRepository, MovieRoute, MovieService}
+import movies.{MovieRepository, MovieRoute, MovieService, ReviewsRepository}
 import user.{UserLogin, UserRepository, UserService}
 
 object Main {
@@ -16,15 +16,16 @@ object Main {
 
   val movieDb = new MovieRepository
   val userDb = new UserRepository
+  val reviewDb = new ReviewsRepository
   val userService = new UserService(userDb)
-  val movieService = new MovieService(movieDb)
+  val movieService = new MovieService(movieDb, reviewDb)
   val movieRoute = new MovieRoute(movieService)
   val userRoute = new UserLogin(userService)
 
   def main(args: Array[String]) {
 
     //TODO: Move this to the route folder
-    val route: Route = movieRoute.getListMovies ~ userRoute.login
+    val route: Route = userRoute.login ~ movieRoute.getListMovies ~ movieRoute.submitMovieReview
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")

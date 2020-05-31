@@ -1,7 +1,7 @@
 package movies
 
 import authentication.AuthenticationDirectives._
-import models.Movie
+import models.{LoginRequest, Movie, MovieReview}
 import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.model.StatusCodes
@@ -25,14 +25,27 @@ class MovieRoute(movieService: MovieService) extends Directives with  MarshallFo
           res => complete(res)
         }
       }
-//      ~
-//        pathPrefix("movie" / LongNumber) { id =>
-//          val movie = dbInstance.findById(id.toString)
-//          onSuccess(movie) {
-//            case Some(res) => complete(res)
-//            case None => complete(StatusCodes.NotFound)
-//          }
-//        }
+      //      ~
+      //        pathPrefix("movie" / LongNumber) { id =>
+      //          val movie = dbInstance.findById(id.toString)
+      //          onSuccess(movie) {
+      //            case Some(res) => complete(res)
+      //            case None => complete(StatusCodes.NotFound)
+      //          }
+      //        }
+    }
+  }
+
+  def submitMovieReview: Route = post {
+    authenticated { authResult =>
+      print("DEBUG: | " + authResult)
+      pathPrefix("submitreview") {
+        entity(as[MovieReview]) { user =>
+          println(user)
+          movieService.insertMovieReview(user)
+          complete(StatusCodes.OK)
+        }
+      }
     }
   }
 
