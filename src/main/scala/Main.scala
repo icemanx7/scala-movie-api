@@ -5,7 +5,8 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 
 import scala.io.StdIn
-import movies.{MovieRepository, MovieRoute, MovieService, ReviewsRepository}
+import movies.{MovieRepository, MovieRoute, MovieService}
+import reviews.ReviewsRepository
 import user.{UserLogin, UserRepository, UserService}
 
 object Main {
@@ -26,7 +27,7 @@ object Main {
   def main(args: Array[String]) {
 
     //TODO: Move this to the route folder
-    val route: Route = userRoute.login ~ movieRoute.getListMovies ~ movieRoute.submitMovieReview
+    val route: Route = userRoute.login ~ movieRoute.getMovieEntities ~ movieRoute.submitMovieReview
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")

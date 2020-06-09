@@ -8,7 +8,7 @@ final case class User(id:String, email: String, password: String, displayName: S
 final case class LoggedInUser(id:String, name: String, jwtToken: String, displayName: String)
 final case class ErrorInfo(code: Int, message: String)
 
-final case class MovieReview(rating: Double, review: String, reviewDate: String, movieID: String)
+final case class MovieReview(username: String, rating: Double, review: String, reviewDate: String, movieID: String)
 
 final case class Review(id: Option[String], review: String, reviewRating: Double, reviewDate: String)
 

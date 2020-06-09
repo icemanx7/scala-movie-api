@@ -8,12 +8,13 @@ class JWTGenerator {
 
   val secretKey = "super_secret_key"
   val algorithm = JwtAlgorithm.HS256
-  val claim = JwtClaim(
-    expiration = Some(Instant.now.plusSeconds(1000).getEpochSecond),
-    issuedAt = Some(Instant.now.getEpochSecond)
-  )
+  val secondsToAdd = 1000
 
   def getToken(): String = {
+    val claim = JwtClaim(
+      expiration = Some(Instant.now.plusSeconds(secondsToAdd).getEpochSecond),
+      issuedAt = Some(Instant.now.getEpochSecond)
+    )
     JwtSprayJson.encode(claim, secretKey, algorithm)
   }
 

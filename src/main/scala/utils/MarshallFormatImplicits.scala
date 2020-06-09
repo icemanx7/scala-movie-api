@@ -10,6 +10,6 @@ trait MarshallFormatImplicits extends SprayJsonSupport with DefaultJsonProtocol 
   implicit val loginRequest = jsonFormat2(LoginRequest)
   implicit val loginUserRequest = jsonFormat4(LoggedInUser)
   implicit val errorInfo = jsonFormat2(ErrorInfo)
-  implicit val movieReview = jsonFormat4(MovieReview)
+  implicit val movieReview = jsonFormat5(MovieReview)
   implicit val review = jsonFormat4(Review)
 }

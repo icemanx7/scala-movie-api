@@ -9,7 +9,7 @@ import utils.MarshallFormatImplicits
 
 class MovieRoute(movieService: MovieService) extends Directives with  MarshallFormatImplicits {
 
-  def getListMovies: Route = get {
+  def getMovieEntities: Route = get {
 
     authenticated { _  =>
       pathPrefix("movies") {
@@ -17,15 +17,21 @@ class MovieRoute(movieService: MovieService) extends Directives with  MarshallFo
         onSuccess(movieList) {
           res => complete(res)
         }
-      }
+      } ~
+        pathPrefix("reviewable") {
+          val movieList = movieService.getAllMovies()
+          onSuccess(movieList) {
+            res => complete(res)
+          }
+        }
     }
   }
 
   def submitMovieReview: Route = post {
     authenticated { authResult =>
       pathPrefix("submitreview") {
-        entity(as[MovieReview]) { user =>
-          movieService.insertMovieReview(user)
+        entity(as[MovieReview]) { review =>
+          movieService.insertMovieReview(review)
           complete(StatusCodes.OK)
         }
       }
