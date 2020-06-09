@@ -21,10 +21,6 @@ object AuthenticationDirectives extends Directives with  MarshallFormatImplicits
       case Some(jwt) if JwtSprayJson.isValid(jwt) =>
         complete(StatusCodes.Unauthorized -> "Token expired.")
 
-      case Some(jwt) =>
-        JwtSprayJson.validate(jwt, jwtToken.secretKey, Seq(JwtAlgorithm.HS256))
-        complete(401 -> ErrorInfo(401, "AA"))
-
       case _ =>
         complete(401 -> ErrorInfo(401, "AA"))
     }
