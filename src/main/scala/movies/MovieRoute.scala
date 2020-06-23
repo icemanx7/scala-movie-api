@@ -1,7 +1,7 @@
 package movies
 
 import authentication.AuthenticationDirectives._
-import models.{MovieReview}
+import models.{MovieReview, ReviewCompDTO}
 import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.model.StatusCodes
 import utils.MarshallFormatImplicits
@@ -19,9 +19,11 @@ class MovieRoute(movieService: MovieService) extends Directives with  MarshallFo
         }
       } ~
         pathPrefix("reviewable") {
-          val movieList = movieService.getAllMovies()
-          onSuccess(movieList) {
-            res => complete(res)
+          entity(as[ReviewCompDTO]) { review =>
+            val movieList = movieService.doesReviewExist(review)
+            onSuccess(movieList) {
+              res => complete(StatusCodes.OK)
+            }
           }
         }
     }
