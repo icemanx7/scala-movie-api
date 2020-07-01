@@ -15,5 +15,4 @@ class UserService(dbInstance: UserRepository)
         user.password == loginUser.password})
       .mapT(user => LoggedInUser(user.id, user.email, jwtToken.getToken, user.displayName))
   }
-
 }

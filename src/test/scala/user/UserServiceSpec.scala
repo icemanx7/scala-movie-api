@@ -14,7 +14,7 @@ class UserServiceSpec extends AnyWordSpec with Matchers {
   val userService = new UserService(userDb)
 
   "The User service" should {
-    "return 200 and valid token after successful login" in {
+    "return the supplied login user details" in {
       val loginUser = LoginRequest("test1", "test1")
       val loggedInUser = userService.login(loginUser)
       val result = Await.result(loggedInUser, 2.seconds)
