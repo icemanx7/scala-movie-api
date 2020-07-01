@@ -25,20 +25,6 @@ class LoginRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
   val loginUser = LoginRequest("test1", "test1")
   val wrongLoginUser = LoginRequest("test", "test1")
 
-  val smallRoute =
-    get {
-      concat(
-        pathSingleSlash {
-          complete {
-            "Captain on the bridge!"
-          }
-        },
-        path("ping") {
-          complete("PONG!")
-        }
-      )
-    }
-
   "The Login Route service" should {
     "return 200 and valid token after successful login" in {
       Post("/login", loginUser) ~> userRoute.login ~> check {
