@@ -1,19 +1,18 @@
+package user
+
 import models.User
 import slick.jdbc.SQLiteProfile.api._
-import user._
-
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 
 class UserMockDB {
+
   val db = Database.forConfig("movies")
   private val users = TableQuery[UserDTO]
   val action: DBIO[Unit] = users.schema.create
   val future: Future[Unit] = db.run(action)
   val result = Await.result(future, 2.seconds)
-
-  //    final case class User(id:String, email: String, password: String, displayName: String)
 
   def freshTestData = Seq(
     User("0", "test1", "test1", "icemanx7"),

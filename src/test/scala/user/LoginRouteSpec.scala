@@ -1,8 +1,9 @@
-import org.scalatest._
+package user
+
 import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
-import Directives._
+import akka.http.scaladsl.testkit.ScalatestRouteTest
 import authentication.JWTGenerator
 import models.{LoggedInUser, LoginRequest}
 import movies.{MovieRepository, MovieRoute, MovieService}
@@ -10,22 +11,15 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.{JwtAlgorithm, JwtSprayJson}
 import reviews.ReviewsRepository
-import user._
 import utils.MarshallFormatImplicits
-import slick.jdbc.SQLiteProfile.api._
 
 class LoginRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with MarshallFormatImplicits  {
 
   val userDB = new UserMockDB
   val jwtToken = new JWTGenerator
 
-  val movieDb = new MovieRepository
   val userDb = new UserRepository
-  val reviewDb = new ReviewsRepository
-
   val userService = new UserService(userDb)
-  val movieService = new MovieService(movieDb, reviewDb)
-  val movieRoute = new MovieRoute(movieService)
   val userRoute = new UserLogin(userService)
 
   val loginUser = LoginRequest("test1", "test1")
@@ -45,7 +39,7 @@ class LoginRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
       )
     }
 
-  "The service" should {
+  "The Login Route service" should {
     "return 200 and valid token after successful login" in {
       Post("/login", loginUser) ~> userRoute.login ~> check {
         status shouldEqual StatusCodes.OK
