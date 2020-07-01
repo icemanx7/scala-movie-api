@@ -29,6 +29,7 @@ class LoginRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
   val userRoute = new UserLogin(userService)
 
   val loginUser = LoginRequest("test1", "test1")
+  val wrongLoginUser = LoginRequest("test", "test1")
 
   val smallRoute =
     get {
@@ -45,7 +46,7 @@ class LoginRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
     }
 
   "The service" should {
-    "return 200 after successfull login" in {
+    "return 200 and valid token after successful login" in {
       Post("/login", loginUser) ~> userRoute.login ~> check {
         status shouldEqual StatusCodes.OK
         val resp = responseAs[LoggedInUser]
@@ -54,26 +55,10 @@ class LoginRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
       }
     }
 
-    "return a 'PONG!' response for GET requests to /ping" in {
+    "return 401 after unsuccessful login" in {
       // tests:
-      Get("/ping") ~> smallRoute ~> check {
-        val resp = responseAs[String]
-        resp shouldEqual "PONG!"
-      }
-    }
-
-    "leave GET requests to other paths unhandled" in {
-      // tests:
-      Get("/kermit") ~> smallRoute ~> check {
-        handled shouldBe false
-      }
-    }
-
-    "return a MethodNotAllowed error for PUT requests to the root path" in {
-      // tests:
-      Put() ~> Route.seal(smallRoute) ~> check {
-        status shouldEqual StatusCodes.MethodNotAllowed
-        responseAs[String] shouldEqual "HTTP method not allowed, supported methods: GET"
+      Post("/login", wrongLoginUser) ~> userRoute.login ~> check {
+        status shouldEqual StatusCodes.Unauthorized
       }
     }
   }
