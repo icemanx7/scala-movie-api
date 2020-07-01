@@ -12,8 +12,6 @@ class UserService(dbInstance: UserRepository)
   def login(loginUser: LoginRequest): Future[Option[LoggedInUser]] = {
     dbInstance.findByUsername(loginUser.username)
       .filterT(user => {
-        println(user)
-        println(user,user.password == loginUser.password)
         user.password == loginUser.password})
       .mapT(user => LoggedInUser(user.id, user.email, jwtToken.getToken, user.displayName))
   }
