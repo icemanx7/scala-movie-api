@@ -17,15 +17,20 @@ class MovieRoute(movieService: MovieService) extends Directives with  MarshallFo
         onSuccess(movieList) {
           res => complete(res)
         }
-      } ~
-        pathPrefix("reviewable") {
-          entity(as[ReviewCompDTO]) { review =>
-            val movieList = movieService.doesReviewExist(review)
-            onSuccess(movieList) {
-              res => complete(StatusCodes.OK)
-            }
+      }
+    }
+  }
+
+  def isReviewable: Route = post {
+    authenticated { _ =>
+      pathPrefix("reviewable") {
+        entity(as[ReviewCompDTO]) { review =>
+          val movieList = movieService.doesReviewExist(review)
+          onSuccess(movieList) {
+            res => complete(res)
           }
         }
+      }
     }
   }
 

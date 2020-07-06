@@ -1,6 +1,6 @@
 package movies
 
-import models.{Movie, MovieReview, Review, ReviewCompDTO}
+import models.{Movie, MovieReview, Review, ReviewCompDTO, ReviewExist}
 import reviews.ReviewsRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -12,7 +12,7 @@ class MovieService(movieDbInstance: MovieRepository, reviewDbInstance: ReviewsRe
   }
 
   //TODO: Add the review exist
-  def doesReviewExist(reviewComp: ReviewCompDTO): Future[Boolean] = {
+  def doesReviewExist(reviewComp: ReviewCompDTO): Future[ReviewExist] = {
     reviewDbInstance.doesReviewExist(reviewComp)
   }
 

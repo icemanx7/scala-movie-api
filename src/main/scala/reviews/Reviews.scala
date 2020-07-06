@@ -1,10 +1,10 @@
 package reviews
 
-import models.{Review, ReviewComp, ReviewCompDTO}
+import models.{Review, ReviewComp, ReviewCompDTO, ReviewExist}
 import slick.jdbc.SQLiteProfile.api._
 import user.{UserDTO, UserRepository}
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
 
 class ReviewDTO(tag: Tag) extends Table[Review](tag, "Reviews") {
@@ -15,15 +15,16 @@ class ReviewDTO(tag: Tag) extends Table[Review](tag, "Reviews") {
   def * = (id.?, review, reviewRating, reviewDate) <> (Review.tupled, Review.unapply)
 }
 
-class MovieUserReviewDTO(tag: Tag) extends Table[ReviewComp](tag, "Reviews") {
+class MovieUserReviewDTO(tag: Tag) extends Table[ReviewComp](tag, "MovieReview") {
   def movieReviewID = column[String]("MovieReviewID", O.PrimaryKey)
   def movieID = column[String]("MovieID")
   def reviewID = column[String]("ReviewID")
   def userID = column[String]("UserID")
-  def * = (movieReviewID.?, movieID, reviewID, userID) <> (ReviewComp.tupled, ReviewComp.unapply)
+  def username = column[String]("Username")
+  def * = (movieReviewID.?, movieID, reviewID, userID, username) <> (ReviewComp.tupled, ReviewComp.unapply)
 }
 
-class ReviewsRepository() {
+class ReviewsRepository() (implicit executionContext: ExecutionContext) {
 
   val reviewTable = TableQuery[ReviewDTO]
   val movieReviewTable = TableQuery[MovieUserReviewDTO]
@@ -39,15 +40,21 @@ class ReviewsRepository() {
     res
   }
 
-  def doesReviewExist(reviewCom: ReviewCompDTO) = {
+  def doesReviewExist(reviewCom: ReviewCompDTO): Future[ReviewExist] = {
     val userId = userTable.filter(user => user.email === reviewCom.username)
     val doesEx  = for {
-      userID <- userTable if userID.email == reviewCom.username
-      movieID <- movieReviewTable if movieID.userID == userId && movieID.movieID == reviewCom.movieId
-    } yield ( userID, movieID )
-    val res = db.run(doesEx.exists.result)
-    println("RESULT: ", Await.result(res, 4.seconds))
-    res
+      movieID <- movieReviewTable if  movieID.movieID === reviewCom.movieId
+      movieIDIn <- movieReviewTable if  movieIDIn.username === reviewCom.username
+    } yield ( movieID, movieIDIn)
+    val isThereReview = db.run(doesEx.exists.result)
+    isThereReview.map(isReview => {
+      if(isReview) {
+        ReviewExist("True")
+      }
+      else {
+        ReviewExist("False")
+      }
+    })
   }
 
 }
