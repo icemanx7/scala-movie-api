@@ -6,13 +6,13 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 
-class UserMockDB {
+object UserMockDB {
 
-  val db = Database.forConfig("movies")
+  private val db = Database.forConfig("movies")
   private val users = TableQuery[UserDTO]
-  val action: DBIO[Unit] = users.schema.create
-  val future: Future[Unit] = db.run(action)
-  val result = Await.result(future, 2.seconds)
+  private val action: DBIO[Unit] = users.schema.create
+  private lazy val future: Future[Unit] = db.run(action)
+  private val result = Await.result(future, 2.seconds)
 
   def freshTestData = Seq(
     User("0", "test1", "test1", "icemanx7"),

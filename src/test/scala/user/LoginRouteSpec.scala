@@ -11,7 +11,7 @@ import utils.MarshallFormatImplicits
 
 class LoginRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with MarshallFormatImplicits  {
 
-  val userDB = new UserMockDB
+  val userDB = UserMockDB
   val jwtToken = new JWTGenerator
 
   val userDb = new UserRepository

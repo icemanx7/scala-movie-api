@@ -9,7 +9,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class UserServiceSpec extends AnyWordSpec with Matchers {
 
-  val userDB = new UserMockDB
+  val userDB = UserMockDB
   val userDb = new UserRepository
   val userService = new UserService(userDb)
 
@@ -22,6 +22,7 @@ class UserServiceSpec extends AnyWordSpec with Matchers {
         case Some(currentUser) => {
           currentUser.name shouldEqual loginUser.username
         }
+        case _  => fail()
       }
     }
   }
