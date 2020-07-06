@@ -1,7 +1,7 @@
 package utils
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import models.{ErrorInfo, LoggedInUser, LoginRequest, Movie, MovieReview, Movies, Review, ReviewComp, ReviewCompDTO, ReviewExist}
+import models.{ErrorInfo, LoggedInUser, LoginRequest, Movie, MovieDTO, MovieReview, Movies, Review, ReviewComp, ReviewCompDTO, ReviewExist}
 import spray.json.DefaultJsonProtocol
 
 trait MarshallFormatImplicits extends SprayJsonSupport with DefaultJsonProtocol {
@@ -14,4 +14,5 @@ trait MarshallFormatImplicits extends SprayJsonSupport with DefaultJsonProtocol 
   implicit val review = jsonFormat4(Review)
   implicit val movieReviewComp = jsonFormat2(ReviewCompDTO)
   implicit val reviewExists = jsonFormat1(ReviewExist)
+  implicit val movieDto = jsonFormat4(MovieDTO)
 }
