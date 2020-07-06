@@ -36,7 +36,6 @@ class ReviewsRepository() (implicit executionContext: ExecutionContext) {
   def insertReview(review: Review): Future[Any] = {
     val insertAction = reviewTable returning reviewTable.map(_.id) += review
     val res = db.run(insertAction)
-    println("RESULT: ", Await.result(res, 4.seconds))
     res
   }
 

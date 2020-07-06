@@ -17,11 +17,11 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-http"   % "10.1.8",
+  "com.typesafe.akka" %% "akka-http"   % "10.1.12",
   "com.typesafe.akka" %% "akka-stream" % "2.5.19" // or whatever the latest version is
 )
 
-libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.8"
+libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.12"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.0"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.0" % "test"
