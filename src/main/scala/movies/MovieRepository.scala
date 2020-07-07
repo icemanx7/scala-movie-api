@@ -18,7 +18,7 @@ class MovieRepository {
 
   val db = Database.forConfig("movies")
 
-  def getAll(): Future[List[Movie]] = {
+  def getAll(username: String): Future[List[Movie]] = {
     db.run(movies.to[List].result)
   }
 

@@ -11,9 +11,10 @@ class MovieRoute(movieService: MovieService) extends Directives with  MarshallFo
 
   def getMovieEntities: Route = get {
 
-    authenticated { _  =>
+    authenticated { token =>
+      println("token: " + token)
       pathPrefix("movies") {
-        val movieList = movieService.getAllMovies()
+        val movieList = movieService.getAllMovies(token)
         onSuccess(movieList) {
           res => complete(res)
         }
