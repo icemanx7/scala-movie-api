@@ -22,3 +22,4 @@ final case class ReviewCompDTO(username: String, movieId: String)
 
 final case class ReviewExist(reviewExists: String)
 
+final case class JWTContent(username: String)

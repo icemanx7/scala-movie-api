@@ -29,7 +29,8 @@ class ReviewRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest 
 
   "The Review Route service" should {
     "return 200 and valid token after successful login" in {
-      val token =  jwtToken.getToken()
+      val username = "test1"
+      val token =  jwtToken.getToken(username)
       val reviewData = ReviewCompDTO("test1", "0")
         Post("/reviewable", reviewData) ~> addHeader("Authorization", token) ~> movieRoute.isReviewable ~> check {
           status shouldEqual StatusCodes.OK

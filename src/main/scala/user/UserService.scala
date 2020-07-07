@@ -13,6 +13,6 @@ class UserService(dbInstance: UserRepository)
     dbInstance.findByUsername(loginUser.username)
       .filterT(user => {
         user.password == loginUser.password})
-      .mapT(user => LoggedInUser(user.id, user.email, jwtToken.getToken, user.displayName))
+      .mapT(user => LoggedInUser(user.id, user.email, jwtToken.getToken(loginUser.username), user.displayName))
   }
 }
