@@ -20,8 +20,7 @@ class MovieUserReviewDTO(tag: Tag) extends Table[ReviewComp](tag, "MovieReview")
   def movieID = column[String]("MovieID")
   def reviewID = column[String]("ReviewID")
   def userID = column[String]("UserID")
-  def username = column[String]("Username")
-  def * = (movieReviewID.?, movieID, reviewID, userID, username) <> (ReviewComp.tupled, ReviewComp.unapply)
+  def * = (movieReviewID.?, movieID, reviewID, userID) <> (ReviewComp.tupled, ReviewComp.unapply)
 }
 
 class ReviewsRepository() (implicit executionContext: ExecutionContext) {
@@ -43,8 +42,7 @@ class ReviewsRepository() (implicit executionContext: ExecutionContext) {
     val userId = userTable.filter(user => user.email === reviewCom.username)
     val doesEx  = for {
       movieID <- movieReviewTable if  movieID.movieID === reviewCom.movieId
-      movieIDIn <- movieReviewTable if  movieIDIn.username === reviewCom.username
-    } yield ( movieID, movieIDIn)
+    } yield ( movieID)
     val isThereReview = db.run(doesEx.exists.result)
     isThereReview.map(isReview => {
       if(isReview) {

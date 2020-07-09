@@ -2,6 +2,7 @@ package user
 
 import models.User
 import slick.jdbc.SQLiteProfile.api._
+
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
@@ -16,7 +17,8 @@ object UserMockDB {
 
   def freshTestData = Seq(
     User("0", "test1", "test1", "icemanx7"),
-    User("1", "test2", "test2", "s1mple|Hax")
+    User("1", "test2", "test2", "s1mple|Hax"),
+    User("3", "abab", "baba", "ASD")
   )
 
   val insert: DBIO[Option[Int]] = users ++= freshTestData

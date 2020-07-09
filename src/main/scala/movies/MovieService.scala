@@ -1,6 +1,6 @@
 package movies
 
-import models.{JWTContent, Movie, MovieReview, Review, ReviewCompDTO, ReviewExist}
+import models.{JWTContent, Movie, MovieDTO, MovieReview, Review, ReviewCompDTO, ReviewExist}
 import pdi.jwt.JwtClaim
 import reviews.ReviewsRepository
 
@@ -12,7 +12,7 @@ import utils.MarshallFormatImplicits
 
 class MovieService(movieDbInstance: MovieRepository, reviewDbInstance: ReviewsRepository)(implicit executionContext: ExecutionContext) extends MarshallFormatImplicits{
 
-  def getAllMovies(jwtClaim: Try[JwtClaim]): Future[List[Movie]] = {
+  def getAllMovies(jwtClaim: Try[JwtClaim]): Future[List[MovieDTO]] = {
     jwtClaim match {
       case Success(user) => {
         val currentUser = user.content.parseJson
