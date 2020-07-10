@@ -10,7 +10,7 @@ import cats.data.OptionT
 import cats.implicits._
 
 class ReviewDTO(tag: Tag) extends Table[Review](tag, "Reviews") {
-  def id = column[String]("ReviewID", O.PrimaryKey)
+  def id = column[Int]("ReviewID", O.PrimaryKey, O.AutoInc)
   def review = column[String]("Review")
   def reviewDate = column[String]("ReviewDate")
   def reviewRating = column[Double]("ReviewRating")
@@ -20,7 +20,7 @@ class ReviewDTO(tag: Tag) extends Table[Review](tag, "Reviews") {
 class MovieUserReviewDTO(tag: Tag) extends Table[ReviewComp](tag, "MovieReview") {
   def movieReviewID = column[String]("MovieReviewID", O.PrimaryKey)
   def movieID = column[String]("MovieID")
-  def reviewID = column[String]("ReviewID")
+  def reviewID = column[Int]("ReviewID")
   def userID = column[String]("UserID")
   def * = (movieReviewID.?, movieID, reviewID, userID) <> (ReviewComp.tupled, ReviewComp.unapply)
 }

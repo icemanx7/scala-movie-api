@@ -17,8 +17,8 @@ object MovieUserViewMockDB {
 
 
   def freshTestData = Seq(
-    ReviewComp(Some("0"),"0", "0", "0"),
-    ReviewComp(Some("3"),"1", "1", "1"),
+    ReviewComp(Some("0"),"0", 20, "0"),
+    ReviewComp(Some("3"),"1", 30, "1"),
   )
 
   val insert: DBIO[Option[Int]] = movieReviewUserDTO ++= freshTestData
