@@ -22,13 +22,8 @@ class MovieService(movieDbInstance: MovieRepository, reviewDbInstance: ReviewsRe
     }
   }
 
-  //TODO: Add the review exist
-  def doesReviewExist(reviewComp: ReviewCompDTO): Future[ReviewExist] = {
-    reviewDbInstance.doesReviewExist(reviewComp)
-  }
-
-  def insertMovieReview(movieReview: MovieReview): Future[Any] = {
+  def insertMovieReview(movieReview: MovieReview): Future[Int] = {
     val review = Review(None, movieReview.review,movieReview.rating, movieReview.reviewDate)
-    reviewDbInstance.insertReview(review)
+    reviewDbInstance.insertReview(review, movieReview.username, movieReview.movieID)
   }
 }

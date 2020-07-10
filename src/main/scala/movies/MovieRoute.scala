@@ -22,18 +22,6 @@ class MovieRoute(movieService: MovieService) extends Directives with  MarshallFo
     }
   }
 
-  def isReviewable: Route = post {
-    authenticated { _ =>
-      pathPrefix("reviewable") {
-        entity(as[ReviewCompDTO]) { review =>
-          val movieList = movieService.doesReviewExist(review)
-          onSuccess(movieList) {
-            res => complete(res)
-          }
-        }
-      }
-    }
-  }
 
   def submitMovieReview: Route = post {
     authenticated { authResult =>

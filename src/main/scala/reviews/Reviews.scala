@@ -1,11 +1,13 @@
 package reviews
 
-import models.{Review, ReviewComp, ReviewCompDTO, ReviewExist}
+import models.{Review, ReviewComp, ReviewCompDTO, ReviewExist, User}
 import slick.jdbc.SQLiteProfile.api._
 import user.{UserDTO, UserRepository}
-
+import utils.MonadTransformers._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
+import cats.data.OptionT
+import cats.implicits._
 
 class ReviewDTO(tag: Tag) extends Table[Review](tag, "Reviews") {
   def id = column[String]("ReviewID", O.PrimaryKey)
@@ -32,26 +34,43 @@ class ReviewsRepository() (implicit executionContext: ExecutionContext) {
   val db = Database.forConfig("movies")
 
   //Opp to learn about queues and transactions YESSS
-  def insertReview(review: Review): Future[Any] = {
+  def insertReview(review: Review, username: String, movieID: String): Future[Int] = {
+    println("IS RUNNING")
+    println("USER NAME: " + username)
+    println("MOVIE ID: " + movieID)
     val insertAction = reviewTable returning reviewTable.map(_.id) += review
+    val user = userTable.filter(_.email === username)
+    val userFuture = db.run(user.to[List].result.headOption)
     val res = db.run(insertAction)
-    res
+    val result = Await.result(res, 2.seconds)
+    println("FUTURE RES: " + result)
+    val dd = for {
+      currentUser <- userFuture.mapT(getUserId)
+      reviewId <- res
+    } yield (currentUser, reviewId)
+
+    val whatIsThis = dd.flatMap{ case (userId, reviewId) =>{
+      println("In flaptma")
+      userId match  {
+        case Some(userItem) => {
+          println("MovieID: " + movieID)
+          println("ReviewID: " + reviewId)
+          println("UserID: " + userItem)
+          val insertReviewComp = ReviewComp(None, movieID,reviewId, userItem)
+          val reviewCompInsertAction = movieReviewTable += insertReviewComp
+          db.run(reviewCompInsertAction)
+        }
+      }
+    }}
+    whatIsThis
   }
 
-  def doesReviewExist(reviewCom: ReviewCompDTO): Future[ReviewExist] = {
-    val userId = userTable.filter(user => user.email === reviewCom.username)
-    val doesEx  = for {
-      movieID <- movieReviewTable if  movieID.movieID === reviewCom.movieId
-    } yield ( movieID)
-    val isThereReview = db.run(doesEx.exists.result)
-    isThereReview.map(isReview => {
-      if(isReview) {
-        ReviewExist("True")
-      }
-      else {
-        ReviewExist("False")
-      }
-    })
+  def getUserId(user: User): String = {
+    user.id
   }
+
+
+
+
 
 }
