@@ -42,8 +42,6 @@ class ReviewsRepository() (implicit executionContext: ExecutionContext) {
     val user = userTable.filter(_.email === username)
     val userFuture = db.run(user.to[List].result.headOption)
     val res = db.run(insertAction)
-    val result = Await.result(res, 2.seconds)
-    println("FUTURE RES: " + result)
     val dd = for {
       currentUser <- userFuture.mapT(getUserId)
       reviewId <- res
@@ -68,9 +66,6 @@ class ReviewsRepository() (implicit executionContext: ExecutionContext) {
   def getUserId(user: User): String = {
     user.id
   }
-
-
-
 
 
 }
