@@ -31,7 +31,7 @@ object Main {
 
     val bindingFuture = Http().bindAndHandle(route, "0.0.0.0", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-    StdIn.readLine()
+//    StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())
       .onComplete(_ ⇒ system.terminate())
