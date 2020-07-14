@@ -36,7 +36,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % "10.1.12"
 )
 
-libraryDependencies ++= Seq("org.specs2" %% "specs2-core" % "4.10.0" % "test")
 scalacOptions in Test ++= Seq("-Yrangepos")
 
 libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test
