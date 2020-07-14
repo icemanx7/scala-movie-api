@@ -31,9 +31,8 @@ object Main {
 
     val port: Int = sys.env.getOrElse("PORT", "8080").toInt
     val bindingFuture = Http().bindAndHandle(route, "0.0.0.0", port)
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
     bindingFuture
-      .flatMap(_.unbind())
-      .onComplete(_ ⇒ system.terminate())
+//      .flatMap(_.unbind())
+//      .onComplete(_ ⇒ system.terminate())
   }
 }
