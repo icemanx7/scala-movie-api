@@ -10,12 +10,14 @@ final case class User(id:String, email: String, password: String, displayName: S
 final case class LoggedInUser(id:String, name: String, jwtToken: String, displayName: String)
 final case class ErrorInfo(code: Int, message: String)
 
+final case class InsertResp(code: Int, message: String)
+
 final case class MovieReview(username: String, rating: Double, review: String, reviewDate: String, movieID: String)
 
 final case class Review(id: Option[Int], review: String, reviewRating: Double, reviewDate: String)
 
 //FOR THE DB Coms
-final case class ReviewComp(movieReviewID: Option[String], movieID: String, reviewID: Int, userID: String)
+final case class ReviewComp(movieReviewID: Option[Int], movieID: String, reviewID: Int, userID: String)
 
 // UI <-> BE
 final case class ReviewCompDTO(username: String, movieId: String)

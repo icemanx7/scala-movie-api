@@ -16,7 +16,7 @@ object UserMockDB {
   private val result = Await.result(future, 2.seconds)
 
   def freshTestData = Seq(
-    User("0", "test1", "test1", "icemanx7"),
+    User("0", "test1", "test1", "test1"),
     User("1", "test2", "test2", "s1mple|Hax"),
     User("3", "abab", "baba", "ASD")
   )

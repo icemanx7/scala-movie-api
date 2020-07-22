@@ -1,6 +1,6 @@
 package movies
 
-import models.{Movie, MovieDTO}
+import models.{Movie, MovieDTO, Movies}
 import reviews.{MovieUserReviewDTO, ReviewDTO}
 import slick.jdbc.SQLiteProfile.api._
 import user.UserDTO
@@ -25,11 +25,11 @@ class MovieRepository (implicit executionContext: ExecutionContext) {
   val db = Database.forConfig("movies")
 
   //TODO: Clean up the function
-  def getAll(username: String): Future[List[MovieDTO]] = {
+  def getAll(username: String): Future[Movies] = {
     val movieListReview = movies.joinLeft(movieReviewTable).on(_.id === _.movieID).joinLeft(userTable).on((movie, rev) => rev.email === username)
     val newMovieList = db.run(movieListReview.to[List].result)
     newMovieList.map(movieList => {
-      movieList.map(singleMovie => {
+      val returnMovieList = movieList.map(singleMovie => {
         val  reviewCompItem = singleMovie._1._2
         val user = singleMovie._2
         val doesHaveReview = for {
@@ -53,7 +53,7 @@ class MovieRepository (implicit executionContext: ExecutionContext) {
           }
         }
       })
-
+      Movies(returnMovieList)
     })
   }
 

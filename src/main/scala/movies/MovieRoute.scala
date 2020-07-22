@@ -1,13 +1,16 @@
 package movies
 
 import authentication.AuthenticationDirectives._
-import models.{MovieReview, ReviewCompDTO}
+import models.{InsertResp, MovieReview, ReviewCompDTO}
 import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.model.StatusCodes
 import utils.MarshallFormatImplicits
 
+import scala.concurrent.ExecutionContext
 
-class MovieRoute(movieService: MovieService) extends Directives with  MarshallFormatImplicits {
+//TODO: Maybe make you're own response types so you can manually set the correct messages and response codes.
+
+class MovieRoute(movieService: MovieService)(implicit executionContext: ExecutionContext) extends Directives with  MarshallFormatImplicits {
 
   def getMovieEntities: Route = get {
 
@@ -27,8 +30,11 @@ class MovieRoute(movieService: MovieService) extends Directives with  MarshallFo
     authenticated { authResult =>
       pathPrefix("submitreview") {
         entity(as[MovieReview]) { review =>
-          movieService.insertMovieReview(review)
-          complete(StatusCodes.OK)
+          val insertResult = movieService.insertMovieReview(review)
+          val insertResultDto = insertResult.map(item => {
+            InsertResp(200, item.toString)
+          })
+          complete(insertResultDto)
         }
       }
     }

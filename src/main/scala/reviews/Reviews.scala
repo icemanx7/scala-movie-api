@@ -18,7 +18,7 @@ class ReviewDTO(tag: Tag) extends Table[Review](tag, "Reviews") {
 }
 
 class MovieUserReviewDTO(tag: Tag) extends Table[ReviewComp](tag, "MovieReview") {
-  def movieReviewID = column[String]("MovieReviewID", O.PrimaryKey)
+  def movieReviewID = column[Int]("MovieReviewID", O.PrimaryKey, O.AutoInc)
   def movieID = column[String]("MovieID")
   def reviewID = column[Int]("ReviewID")
   def userID = column[String]("UserID")
@@ -33,38 +33,68 @@ class ReviewsRepository() (implicit executionContext: ExecutionContext) {
 
   val db = Database.forConfig("movies")
 
-  //Opp to learn about queues and transactions YESSS
+  //Opp to learn about queues and transactions YESSS or split it into functions. Map it out
   def insertReview(review: Review, username: String, movieID: String): Future[Int] = {
-    println("IS RUNNING")
-    println("USER NAME: " + username)
-    println("MOVIE ID: " + movieID)
+    val isThereReview = doesReviewExist(username, movieID)
+
+    //Check if review exist? Can't have duplicate reviews bra
     val insertAction = reviewTable returning reviewTable.map(_.id) += review
     val user = userTable.filter(_.email === username)
     val userFuture = db.run(user.to[List].result.headOption)
     val res = db.run(insertAction)
-    val dd = for {
+    val reviewCombo = for {
       currentUser <- userFuture.mapT(getUserId)
       reviewId <- res
-    } yield (currentUser, reviewId)
+      isThereReviewNow <- isThereReview
+    } yield (currentUser, reviewId, isThereReviewNow)
+    val currentReviews = db.run(movieReviewTable.to[List].result)
 
-    val whatIsThis = dd.flatMap{ case (userId, reviewId) =>{
-      println("In flaptma")
+    val whatIsThis = reviewCombo.flatMap{ case (userId, reviewId, doesCurrentReviewExist) =>{
       userId match  {
-        case Some(userItem) => {
-          println("MovieID: " + movieID)
-          println("ReviewID: " + reviewId)
-          println("UserID: " + userItem)
-          val insertReviewComp = ReviewComp(None, movieID,reviewId, userItem)
-          val reviewCompInsertAction = movieReviewTable += insertReviewComp
-          db.run(reviewCompInsertAction)
+        case Some(userItem)  => {
+          if (!doesCurrentReviewExist) {
+            val insertReviewComp = ReviewComp(None, movieID,reviewId, userItem)
+            val reviewCompInsertAction = movieReviewTable += insertReviewComp
+            db.run(reviewCompInsertAction)
+          }
+          else {
+            Future { 0 }
+          }
         }
       }
     }}
     whatIsThis
   }
 
+  private def getUserID(username: String): Future[Option[User]] = {
+    val user = userTable.filter(_.email === username)
+    db.run(user.to[List].result.headOption)
+  }
+
+  private def doesReviewExist(username: String, movieID: String): Future[Boolean] = {
+    val userid = getUserID(username)
+    userid.flatMap(userId => {
+      userId match {
+        case Some(idNum) => {
+          val currentReviews = movieReviewTable.filter(movieReview => movieReview.userID === idNum.id && movieReview.movieID === movieID)
+          db.run(currentReviews.exists.result)
+        }
+      }
+    })
+  }
+
+  // TODO: Make a parent function of the class like a trait vibe
+  private def resolveFuture[A](fut: Future[A]): A = {
+    Await.result(fut, 2.seconds)
+  }
+
+
   def getUserId(user: User): String = {
     user.id
+  }
+
+  def getAllEntries() = {
+    db.run(movieReviewTable.to[List].result)
   }
 
 
