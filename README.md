@@ -8,4 +8,8 @@ A simple REST API implementation of movie database. It contains a SQLite databas
 * Slick
 * akka-http
 
+## How to test
+curl -i -X POST localhost:8080/login -d '{"username": "test1", "password":"test1"}' -H "Content-Type: application/json"
+
+
 
