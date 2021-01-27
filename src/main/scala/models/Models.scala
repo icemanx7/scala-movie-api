@@ -25,3 +25,35 @@ final case class ReviewCompDTO(username: String, movieId: String)
 final case class ReviewExist(reviewExists: String)
 
 final case class JWTContent(username: String)
+
+
+final case class Rating ( Source: String,
+                          Value: String
+                        )
+
+final case class DetailedMovie (
+                                 Title: String,
+                                 Rated: String,
+                                 Released: String,
+                                 Runtime: String,
+                                 Genre: String,
+                                 Director: String,
+                                 Actors: String,
+                                 Plot: String,
+                                 Language: String,
+                                 Country: String,
+                                 Awards: String,
+                                 Poster: String,
+                                 Ratings: List[Rating],
+                                 Metascore: String,
+                                 imdbRating: String,
+                                 imdbVotes: String,
+                                 imdbID: String,
+                                 Type: String,
+                                 DVD: String,
+                                 BoxOffice: String,
+                                 Website: String,
+                                 Response: String,
+                               )
+
+

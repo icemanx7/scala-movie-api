@@ -45,3 +45,5 @@ libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test
 libraryDependencies += "com.h2database" % "h2" % "1.4.197" % Test
 
 libraryDependencies += "org.typelevel" %% "cats-core" % "2.0.0"
+
+libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "4.1.1"

@@ -1,15 +1,17 @@
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.server.Directives._
-
-import scala.io.StdIn
+import models.{DetailedMovie, Movie}
+import org.mongodb.scala._
 import movies.{MovieRepository, MovieRoute, MovieService}
 import reviews.ReviewsRepository
 import user.{UserLogin, UserRepository, UserService}
+import spray.json._
+import utils.MarshallFormatImplicits
 
-object Main {
+object Main extends Directives with  MarshallFormatImplicits{
 
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
@@ -25,6 +27,15 @@ object Main {
   val userRoute = new UserLogin(userService)
 
   def main(args: Array[String]) {
+
+    val mongoClient = MongoClient()
+    val database: MongoDatabase = mongoClient.getDatabase("movies")
+    val coll: MongoCollection[Document] = database.getCollection("singleMovies")
+    coll.find().subscribe(res => {
+      println(res.toJson.parseJson.convertTo[DetailedMovie].Title)
+    })
+
+
 
     //TODO: Move this to the route folder
     val route: Route = userRoute.login ~ movieRoute.getMovieEntities ~ movieRoute.submitMovieReview
