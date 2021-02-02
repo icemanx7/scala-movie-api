@@ -23,9 +23,10 @@ class MovieSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with M
   val jwtToken = new JWTGenerator
 
   val movieDb = new MovieRepository
+  val metaMovieDb = new MovieMongoRepository
   val reviewDb = new ReviewsRepository
 
-  val movieService = new MovieService(movieDb, reviewDb)
+  val movieService = new MovieService(movieDb, reviewDb, metaMovieDb)
   val movieRoute = new MovieRoute(movieService)
 
   "The Movie Route service" should {

@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.{Directives, Route}
 import akka.http.scaladsl.server.Directives._
 import models.{DetailedMovie, Movie}
 import org.mongodb.scala._
-import movies.{MovieRepository, MovieRoute, MovieService}
+import movies.{MovieMongoRepository, MovieRepository, MovieRoute, MovieService}
 import reviews.ReviewsRepository
 import user.{UserLogin, UserRepository, UserService}
 import spray.json._
@@ -18,11 +18,12 @@ object Main extends Directives with  MarshallFormatImplicits{
   implicit val executionContext = system.dispatcher
 
   val movieDb = new MovieRepository
+  val metaMovieDB = new MovieMongoRepository
   val userDb = new UserRepository
   val reviewDb = new ReviewsRepository
 
   val userService = new UserService(userDb)
-  val movieService = new MovieService(movieDb, reviewDb)
+  val movieService = new MovieService(movieDb, reviewDb, metaMovieDB)
   val movieRoute = new MovieRoute(movieService)
   val userRoute = new UserLogin(userService)
 
@@ -32,7 +33,7 @@ object Main extends Directives with  MarshallFormatImplicits{
     val database: MongoDatabase = mongoClient.getDatabase("movies")
     val coll: MongoCollection[Document] = database.getCollection("singleMovies")
     coll.find().subscribe(res => {
-      println(res.toJson.parseJson.convertTo[DetailedMovie].Title)
+      println(res.toJson.parseJson.convertTo[DetailedMovie])
     })
 
 

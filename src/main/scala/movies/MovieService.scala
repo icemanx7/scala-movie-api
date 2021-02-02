@@ -10,7 +10,7 @@ import spray.json._
 import DefaultJsonProtocol._
 import utils.MarshallFormatImplicits
 
-class MovieService(movieDbInstance: MovieRepository, reviewDbInstance: ReviewsRepository)(implicit executionContext: ExecutionContext) extends MarshallFormatImplicits{
+class MovieService(movieDbInstance: MovieRepository, reviewDbInstance: ReviewsRepository, metaMovieDb: MovieMongoRepository)(implicit executionContext: ExecutionContext) extends MarshallFormatImplicits{
 
   def getAllMovies(jwtClaim: Try[JwtClaim]): Future[Movies] = {
     jwtClaim match {
@@ -20,6 +20,10 @@ class MovieService(movieDbInstance: MovieRepository, reviewDbInstance: ReviewsRe
         movieDbInstance.getAll(currentUserObj.username)
       }
     }
+  }
+
+  def getAllMoviesMetaData() = {
+    metaMovieDb.getAllMovieMetaData()
   }
 
   def insertMovieReview(movieReview: MovieReview): Future[Int] = {
