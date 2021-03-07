@@ -18,8 +18,8 @@ object ReviewMockDB {
 
 
   def freshTestData = Seq(
-    Review(None, "great movie", 7.5, "today"),
-    Review(None, "Bad movie", 1.5, "yesterDay")
+    Review(None, false),
+    Review(None, true)
   )
 
   val insert: DBIO[Option[Int]] = reviews ++= freshTestData

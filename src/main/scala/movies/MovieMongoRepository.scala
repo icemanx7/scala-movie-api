@@ -9,7 +9,6 @@ import scala.concurrent.Future
 
 class MovieMongoRepository extends  MarshallFormatImplicits{
 
-
   def getAllMovieMetaData(): Future[Seq[DetailedMovie]] = {
     val mongoClient = MongoClient()
     val database: MongoDatabase = mongoClient.getDatabase("movies")
