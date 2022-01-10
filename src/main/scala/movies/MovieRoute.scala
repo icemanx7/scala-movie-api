@@ -21,6 +21,12 @@ class MovieRoute(movieService: MovieService)(implicit executionContext: Executio
         onSuccess(movieList) {
           res => complete(res)
         }
+      } ~
+      pathPrefix("meta") {
+        val movieList = movieService.getAllMoviesMetaData()
+        onSuccess(movieList) {
+          res => complete(res)
+        }
       }
     }
   }

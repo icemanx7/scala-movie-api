@@ -4,7 +4,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import authentication.JWTGenerator
 import models.{LoggedInUser, LoginRequest, ReviewCompDTO, ReviewExist}
-import movies.{MovieRepository, MovieRoute, MovieService, MoviesMockDB}
+import movies.{MovieMongoRepository, MovieRepository, MovieRoute, MovieService, MoviesMockDB}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import pdi.jwt.{JwtAlgorithm, JwtSprayJson}
@@ -22,9 +22,10 @@ class ReviewRouteSpec extends AnyWordSpec with Matchers with ScalatestRouteTest 
   val jwtToken = new JWTGenerator
 
   val reviewDb = new ReviewsRepository
+  val metaMovieDb = new MovieMongoRepository
   val movieDb = new MovieRepository
 
-  val movieService = new MovieService(movieDb, reviewDb)
+  val movieService = new MovieService(movieDb, reviewDb, metaMovieDb)
   val movieRoute = new MovieRoute(movieService)
 
   "The Review Route service" should {

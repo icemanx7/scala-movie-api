@@ -4,6 +4,7 @@ import models.{Review, ReviewComp, ReviewCompDTO, ReviewExist, User}
 import slick.jdbc.SQLiteProfile.api._
 import user.{UserDTO, UserRepository}
 import utils.MonadTransformers._
+
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
 import cats.data.OptionT
@@ -11,10 +12,8 @@ import cats.implicits._
 
 class ReviewDTO(tag: Tag) extends Table[Review](tag, "Reviews") {
   def id = column[Int]("ReviewID", O.PrimaryKey, O.AutoInc)
-  def review = column[String]("Review")
-  def reviewDate = column[String]("ReviewDate")
-  def reviewRating = column[Double]("ReviewRating")
-  def * = (id.?, review, reviewRating, reviewDate) <> (Review.tupled, Review.unapply)
+  def reviewLike = column[Boolean]("ReviewLike")
+  def * = (id.?, reviewLike) <> (Review.tupled, Review.unapply)
 }
 
 class MovieUserReviewDTO(tag: Tag) extends Table[ReviewComp](tag, "MovieReview") {

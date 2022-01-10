@@ -23,9 +23,10 @@ class MovieSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with M
   val jwtToken = new JWTGenerator
 
   val movieDb = new MovieRepository
+  val metaMovieDb = new MovieMongoRepository
   val reviewDb = new ReviewsRepository
 
-  val movieService = new MovieService(movieDb, reviewDb)
+  val movieService = new MovieService(movieDb, reviewDb, metaMovieDb)
   val movieRoute = new MovieRoute(movieService)
 
   "The Movie Route service" should {
@@ -38,7 +39,7 @@ class MovieSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with M
     }
     "return 200 when inserting a full movie review" in {
       val username = "test1"
-      val movieReviewItem = MovieReview(username, 8, "Very good testinng", "YESTERDAY","0")
+      val movieReviewItem = MovieReview(username, true, "0")
       val token =  jwtToken.getToken(username)
       Post("/submitreview", movieReviewItem) ~> addHeader("Authorization", token) ~> movieRoute.submitMovieReview ~> check {
         status shouldEqual StatusCodes.OK
@@ -47,7 +48,7 @@ class MovieSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with M
     "fail when attempting multiple review inserts" in {
       val username = "test1"
       val numberOfMovies = 6
-      val movieReviewItem = MovieReview(username, 0, "Very good testinng", "YESTERDAY","0")
+      val movieReviewItem = MovieReview(username, true,"0")
       val token =  jwtToken.getToken(username)
       Get("/movies") ~> addHeader("Authorization", token) ~> movieRoute.getMovieEntities ~> check {
         status shouldEqual StatusCodes.OK
